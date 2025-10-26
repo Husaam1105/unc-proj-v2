@@ -4,13 +4,14 @@ import { motion } from "motion/react";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { ArrowLeft, Eye, EyeOff, User, Mail, Lock } from "lucide-react";
-import { useAuth } from "../contexts/AuthContext";
+import { supabase } from "../lib/supabase";
 
 export function RegisterPage() {
   const navigate = useNavigate();
-  const { login } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -18,16 +19,53 @@ export function RegisterPage() {
     confirmPassword: "",
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Create user data and log them in
-    const userData = {
-      id: Date.now().toString(), // Simple ID generation
-      fullName: formData.fullName,
-      email: formData.email,
-    };
-    login(userData);
-    navigate('/home');
+    setError("");
+
+    if (formData.password !== formData.confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
+
+    if (formData.password.length < 6) {
+      setError("Password must be at least 6 characters");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const { data: authData, error: signUpError } = await supabase.auth.signUp({
+        email: formData.email,
+        password: formData.password,
+      });
+
+      if (signUpError) {
+        setError(signUpError.message);
+        setLoading(false);
+        return;
+      }
+
+      if (authData.user) {
+        const { error: insertError } = await supabase.from('users').insert({
+          id: authData.user.id,
+          email: formData.email,
+          full_name: formData.fullName,
+        });
+
+        if (insertError) {
+          setError("Failed to create user profile");
+          setLoading(false);
+          return;
+        }
+
+        navigate('/home');
+      }
+    } catch (err) {
+      setError("An error occurred. Please try again.");
+      setLoading(false);
+    }
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -123,6 +161,12 @@ export function RegisterPage() {
                 onSubmit={handleSubmit}
                 className="space-y-6"
               >
+                {error && (
+                  <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-3 text-sm text-red-400">
+                    {error}
+                  </div>
+                )}
+
                 {/* Full Name Field */}
                 <div className="space-y-3">
                   <label className="text-sm font-medium text-gray-300 px-3">Full Name</label>
@@ -242,9 +286,10 @@ export function RegisterPage() {
                 {/* Submit Button */}
                 <Button
                   type="submit"
-                  className="w-full bg-gradient-to-r from-purple-600 via-purple-500 to-fuchsia-600 hover:from-purple-500 hover:via-purple-400 hover:to-fuchsia-500 text-white font-bold shadow-2xl shadow-purple-500/50 hover:shadow-purple-500/70 transition-all duration-300 group relative overflow-hidden h-12"
+                  disabled={loading}
+                  className="w-full bg-gradient-to-r from-purple-600 via-purple-500 to-fuchsia-600 hover:from-purple-500 hover:via-purple-400 hover:to-fuchsia-500 text-white font-bold shadow-2xl shadow-purple-500/50 hover:shadow-purple-500/70 transition-all duration-300 group relative overflow-hidden h-12 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <span className="relative z-10">Create Account</span>
+                  <span className="relative z-10">{loading ? "Creating Account..." : "Create Account"}</span>
                   <div className="absolute inset-0 bg-gradient-to-r from-fuchsia-600 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity"></div>
                 </Button>
               </motion.form>

@@ -3,8 +3,10 @@ import { ArrowRight, Play, Star, Users, Zap } from "lucide-react";
 import { Button } from "./ui/button";
 import { motion } from "motion/react";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
+import { useAuth } from "../contexts/AuthContext";
 
 export function Hero() {
+  const { isAuthenticated } = useAuth();
   return (
     <section id="hero" className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Animated Background */}
@@ -99,19 +101,21 @@ export function Hero() {
               transition={{ duration: 0.8, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
               className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-12"
             >
-              <Link to="/register">
-                <Button
-                  size="lg"
-                  className="bg-gradient-to-r from-purple-600 via-purple-500 to-fuchsia-600 hover:from-purple-500 hover:via-purple-400 hover:to-fuchsia-500 text-white font-bold shadow-2xl shadow-purple-500/50 hover:shadow-purple-500/70 transition-all duration-300 group relative overflow-hidden"
-                  style={{ height: '3.5rem', padding: '0 2rem', fontSize: '1.0625rem' }}
-                >
-                  <span className="relative z-10 flex items-center gap-2">
-                    Start Learning Free
-                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                  </span>
-                  <div className="absolute inset-0 bg-gradient-to-r from-fuchsia-600 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                </Button>
-              </Link>
+              {!isAuthenticated && (
+                <Link to="/register">
+                  <Button
+                    size="lg"
+                    className="bg-gradient-to-r from-purple-600 via-purple-500 to-fuchsia-600 hover:from-purple-500 hover:via-purple-400 hover:to-fuchsia-500 text-white font-bold shadow-2xl shadow-purple-500/50 hover:shadow-purple-500/70 transition-all duration-300 group relative overflow-hidden"
+                    style={{ height: '3.5rem', padding: '0 2rem', fontSize: '1.0625rem' }}
+                  >
+                    <span className="relative z-10 flex items-center gap-2">
+                      Start Learning Free
+                      <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                    </span>
+                    <div className="absolute inset-0 bg-gradient-to-r from-fuchsia-600 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                  </Button>
+                </Link>
+              )}
               <Button
                 size="lg"
                 variant="outline"

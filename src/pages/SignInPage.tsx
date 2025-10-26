@@ -4,27 +4,40 @@ import { motion } from "motion/react";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { ArrowLeft, Eye, EyeOff, Mail, Lock } from "lucide-react";
-import { useAuth } from "../contexts/AuthContext";
+import { supabase } from "../lib/supabase";
 
 export function SignInPage() {
   const navigate = useNavigate();
-  const { login } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Create user data and log them in
-    const userData = {
-      id: Date.now().toString(), // Simple ID generation
-      fullName: "User", // Default name for sign in
-      email: formData.email,
-    };
-    login(userData);
-    navigate('/home');
+    setError("");
+    setLoading(true);
+
+    try {
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email: formData.email,
+        password: formData.password,
+      });
+
+      if (signInError) {
+        setError("Invalid email or password");
+        setLoading(false);
+        return;
+      }
+
+      navigate('/home');
+    } catch (err) {
+      setError("An error occurred. Please try again.");
+      setLoading(false);
+    }
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -120,6 +133,12 @@ export function SignInPage() {
                 onSubmit={handleSubmit}
                 className="space-y-6"
               >
+                {error && (
+                  <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-3 text-sm text-red-400">
+                    {error}
+                  </div>
+                )}
+
                 {/* Email Field */}
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-gray-300 px-3">Email Address</label>
@@ -169,9 +188,10 @@ export function SignInPage() {
                 {/* Submit Button */}
                 <Button
                   type="submit"
-                  className="w-full bg-gradient-to-r from-purple-600 via-purple-500 to-fuchsia-600 hover:from-purple-500 hover:via-purple-400 hover:to-fuchsia-500 text-white font-bold shadow-2xl shadow-purple-500/50 hover:shadow-purple-500/70 transition-all duration-300 group relative overflow-hidden h-12"
+                  disabled={loading}
+                  className="w-full bg-gradient-to-r from-purple-600 via-purple-500 to-fuchsia-600 hover:from-purple-500 hover:via-purple-400 hover:to-fuchsia-500 text-white font-bold shadow-2xl shadow-purple-500/50 hover:shadow-purple-500/70 transition-all duration-300 group relative overflow-hidden h-12 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <span className="relative z-10">Sign In</span>
+                  <span className="relative z-10">{loading ? "Signing In..." : "Sign In"}</span>
                   <div className="absolute inset-0 bg-gradient-to-r from-fuchsia-600 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity"></div>
                 </Button>
               </motion.form>
