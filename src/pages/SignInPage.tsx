@@ -122,54 +122,49 @@ export function SignInPage() {
               >
                 {/* Email Field */}
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-300">Email Address</label>
+                  <label className="text-sm font-medium text-gray-300 px-3">Email Address</label>
                   <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 flex-shrink-0" />
+                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-7 h-4 text-gray-500 flex-shrink-0" />
                     <Input
                       type="email"
                       name="email"
                       value={formData.email}
                       onChange={handleInputChange}
                       placeholder="Enter your email"
-                      className="pl-10 bg-black/40 border-purple-500/30 text-white placeholder-gray-500 focus:border-purple-500/50 focus:ring-purple-500/50"
+                      className="px-6 bg-black/40 border-purple-500/30 text-white placeholder-gray-500 focus:border-purple-500/50 focus:ring-purple-500/50"
                       required
                     />
                   </div>
                 </div>
 
-                {/* Password Field */}
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-300">Password</label>
-                  <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 flex-shrink-0" />
-                    <Input
-                      type={showPassword ? "text" : "password"}
-                      name="password"
-                      value={formData.password}
-                      onChange={handleInputChange}
-                      placeholder="Enter your password"
-                      className="pl-10 pr-10 bg-black/40 border-purple-500/30 text-white placeholder-gray-500 focus:border-purple-500/50 focus:ring-purple-500/50"
-                      required
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white transition-colors flex-shrink-0"
-                    >
-                      {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                    </button>
-                  </div>
-                </div>
+  <label className="text-sm font-medium text-gray-300 px-3">Password</label>
 
-                {/* Forgot Password Link */}
-                <div className="text-right">
-                  <button
-                    type="button"
-                    className="text-sm text-purple-400 hover:text-purple-300 transition-colors"
-                  >
-                    Forgot password?
-                  </button>
-                </div>
+  <div className="flex items-center gap-2">
+    {/* 1. Use flex-grow instead of w-full */}
+    <div className="relative flex-grow">
+      <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-7 h-4 text-gray-500 flex-shrink-0" />
+      <Input
+        type={showPassword ? "text" : "password"}
+        name="password"
+        value={formData.password}
+        onChange={handleInputChange}
+        placeholder="Create a password"
+        className="w-full px-6 bg-black/40 border-purple-500/30 text-white placeholder-gray-500 focus:border-purple-500/50 focus:ring-purple-500/50"
+        required
+      />
+    </div>
+
+    {/* This button will now be visible */}
+    <button
+      type="button"
+      onClick={() => setShowPassword(!showPassword)}
+      className="text-gray-500 hover:text-white transition-colors flex-shrink-0"
+    >
+      {showPassword ? <Eye className="w-5 h-4" /> : <EyeOff className="w-5 h-4" />}
+    </button>
+  </div>
+</div>
 
                 {/* Submit Button */}
                 <Button

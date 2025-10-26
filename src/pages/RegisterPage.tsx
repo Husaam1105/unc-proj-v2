@@ -124,17 +124,17 @@ export function RegisterPage() {
                 className="space-y-6"
               >
                 {/* Full Name Field */}
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-300">Full Name</label>
+                <div className="space-y-3">
+                  <label className="text-sm font-medium text-gray-300 px-3">Full Name</label>
                   <div className="relative">
-                    <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 flex-shrink-0" />
+                    <User className="absolute left-3 top-1/2 -translate-y-1/2 w-7 h-4 text-gray-500 flex-shrink-0" />
                     <Input
                       type="text"
                       name="fullName"
                       value={formData.fullName}
                       onChange={handleInputChange}
                       placeholder="Enter your full name"
-                      className="pl-10 bg-black/40 border-purple-500/30 text-white placeholder-gray-500 focus:border-purple-500/50 focus:ring-purple-500/50"
+                      className="px-6 bg-black/40 border-purple-500/30 text-white placeholder-gray-500 focus:border-purple-500/50 focus:ring-purple-500/50"
                       required
                     />
                   </div>
@@ -142,47 +142,53 @@ export function RegisterPage() {
 
                 {/* Email Field */}
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-300">Email Address</label>
+                  <label className="text-sm font-medium text-gray-300 px-3">Email Address</label>
                   <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 flex-shrink-0" />
+                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-7 h-4 text-gray-500 flex-shrink-0" />
                     <Input
                       type="email"
                       name="email"
                       value={formData.email}
                       onChange={handleInputChange}
                       placeholder="Enter your email"
-                      className="pl-10 bg-black/40 border-purple-500/30 text-white placeholder-gray-500 focus:border-purple-500/50 focus:ring-purple-500/50"
+                      className="px-6 bg-black/40 border-purple-500/30 text-white placeholder-gray-500 focus:border-purple-500/50 focus:ring-purple-500/50"
                       required
                     />
                   </div>
                 </div>
 
                 {/* Password Field */}
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-300">Password</label>
-                  <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 flex-shrink-0" />
-                    <Input
-                      type={showPassword ? "text" : "password"}
-                      name="password"
-                      value={formData.password}
-                      onChange={handleInputChange}
-                      placeholder="Create a password"
-                      className="pl-10 pr-10 bg-black/40 border-purple-500/30 text-white placeholder-gray-500 focus:border-purple-500/50 focus:ring-purple-500/50"
-                      required
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white transition-colors flex-shrink-0"
-                    >
-                      {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                    </button>
-                  </div>
-                </div>
+<div className="space-y-2">
+  <label className="text-sm font-medium text-gray-300 px-3">Password</label>
+
+  <div className="flex items-center gap-2">
+    {/* 1. Use flex-grow instead of w-full */}
+    <div className="relative flex-grow">
+      <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-7 h-4 text-gray-500 flex-shrink-0" />
+      <Input
+        type={showPassword ? "text" : "password"}
+        name="password"
+        value={formData.password}
+        onChange={handleInputChange}
+        placeholder="Create a password"
+        className="w-full px-6 bg-black/40 border-purple-500/30 text-white placeholder-gray-500 focus:border-purple-500/50 focus:ring-purple-500/50"
+        required
+      />
+    </div>
+
+    {/* This button will now be visible */}
+    <button
+      type="button"
+      onClick={() => setShowPassword(!showPassword)}
+      className="text-gray-500 hover:text-white transition-colors flex-shrink-0"
+    >
+      {showPassword ? <Eye className="w-5 h-4" /> : <EyeOff className="w-5 h-4" />}
+    </button>
+  </div>
+</div>
 
                 {/* Confirm Password Field */}
-                <div className="space-y-2">
+                {/* <div className="space-y-2">
                   <label className="text-sm font-medium text-gray-300">Confirm Password</label>
                   <div className="relative">
                     <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 flex-shrink-0" />
@@ -203,7 +209,35 @@ export function RegisterPage() {
                       {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                     </button>
                   </div>
-                </div>
+                </div> */}
+                <div className="space-y-2">
+  <label className="text-sm font-medium text-gray-300 px-3">Confirm Password</label>
+
+  <div className="flex items-center gap-2">
+    {/* 1. Use flex-grow instead of w-full */}
+    <div className="relative flex-grow">
+      <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-7 h-4 text-gray-500 flex-shrink-0" />
+      <Input
+        type={showConfirmPassword ? "text" : "password"}
+        name="confirmPassword"
+        value={formData.confirmPassword}
+        onChange={handleInputChange}
+        placeholder="Confirm your password"
+        className="w-full px-6 bg-black/40 border-purple-500/30 text-white placeholder-gray-500 focus:border-purple-500/50 focus:ring-purple-500/50"
+        required
+      />
+    </div>
+
+    {/* This button will now be visible */}
+    <button
+      type="button"
+      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+      className="text-gray-500 hover:text-white transition-colors flex-shrink-0"
+    >
+      {showConfirmPassword ? <Eye className="w-5 h-4" /> : <EyeOff className="w-5 h-4" />}
+    </button>
+  </div>
+</div>
 
                 {/* Submit Button */}
                 <Button
